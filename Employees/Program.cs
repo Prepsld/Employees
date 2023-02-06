@@ -59,7 +59,7 @@ namespace Employees
                     double salaryDouble = double.Parse(salary);
 
                     // Create Salaried instance
-                    Salaried salaried = new Salaried(id, name, address, salaryDouble);
+                    Salaried salaried = new Salaried(id, name, address, phoneNumber, sinNum, birthday, department, salaryDouble);
 
                     // Add to list of employees.
                     employees.Add(salaried);
@@ -75,7 +75,7 @@ namespace Employees
                     double hoursDouble = double.Parse(hours);
 
                     // Create Wages instance
-                    Waged wages = new Waged(id,name, address, rateDouble, hoursDouble);
+                    Waged wages = new Waged(id,name, address, phoneNumber, sinNum, birthday, department, rateDouble, hoursDouble);
 
                     // Add to list of employees.
                     employees.Add(wages);
@@ -91,7 +91,7 @@ namespace Employees
                     double hoursDouble = double.Parse(hours);
 
                     // Create PartTime instance
-                    PartTime partTime = new PartTime(id, name, address, rateDouble, hoursDouble);
+                    PartTime partTime = new PartTime(id, name, address, phoneNumber, sinNum, birthday, department, rateDouble, hoursDouble);
 
                     // Add to list of employees
                     employees.Add(partTime);
@@ -124,8 +124,7 @@ namespace Employees
             }
 
             double averageWeeklyPay = weeklyPaySum / employees.Count;
-
-            Console.WriteLine("Average Weekly pay: " + averageWeeklyPay);
+            Console.WriteLine($"Average weekly pay: {averageWeeklyPay:C}");
             // This loop is to find the highest paid waged employee
             Waged highestPaidWage = null;
             foreach (Employee employee in employees)
@@ -140,8 +139,7 @@ namespace Employees
                     }
                 }
             }
-            Console.WriteLine("Employee " + highestPaidWage.Name + " is the highest paid for wages ($" + highestPaidWage.CalcWeeklyPay() + ")");
-
+            Console.WriteLine($"Employee {highestPaidWage.Name} is the highest paid for wages ({highestPaidWage.CalcWeeklyPay():C}");
             // This loop is to find the lowest paid Salaried employee
             Salaried lowestSalary = null;
             foreach (Employee employee in employees)
@@ -156,10 +154,31 @@ namespace Employees
                     }
                 }
             }
-            Console.WriteLine("Employee " + lowestSalary.Name + " is lowest paid for salaried ($" + lowestSalary.CalcWeeklyPay() + ")");
-
-
+            Console.WriteLine($"Employee {lowestSalary.Name} is the lowest paid salary worker ({lowestSalary.CalcWeeklyPay():C})");
             // The last line here is to figure out the percentage of employees in each category.
+            double salaryPercentageCount = 0;
+            double wagePercentageCount = 0;
+            double partPercentageCount = 0;
+            foreach (Employee employee in employees)
+            {
+                if (employee is Salaried)
+                {
+                    salaryPercentageCount += 1;
+                }
+                else if (employee is Waged)
+                {
+                    wagePercentageCount += 1;
+                }
+                else if (employee is PartTime)
+                {
+                    partPercentageCount += 1;
+                }
+            }
+            double salaryPercentage = (salaryPercentageCount / employees.Count);
+            double wagePercentage = (wagePercentageCount / employees.Count);
+            double partPercentage = (partPercentageCount / employees.Count);
+
+            Console.WriteLine($"Percentage of Salaried employees: {salaryPercentage:P} \n Percentage of Waged employess: {wagePercentage:P} \n percentage of Part time employees: {partPercentage:P}");
         }
     }
 }

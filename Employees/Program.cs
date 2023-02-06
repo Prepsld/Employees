@@ -11,8 +11,8 @@ namespace Employees
     /// <summary>
     /// CPRG211 - Lab Inheritance
     /// </summary>
-    /// <remarks>Author: </remarks>
-    /// <remarks>Date: </remarks>
+    /// <remarks>Author: Nick Hamnett, finished by David Prepsl</remarks>
+    /// <remarks>Date: February 5th, 2023 </remarks>
     internal class Program
     {
         static void Main(string[] args)
@@ -36,8 +36,12 @@ namespace Employees
                 string id = cells[0];
                 string name = cells[1];
                 string address = cells[2];
-				
-				// TODO: Get remaining employee info from cells
+
+                // TODO: Get remaining employee info from cells
+                string phoneNumber = cells[3];
+                long sinNum = long.Parse(cells[4]);
+                string birthday = cells[5];
+                string department = cells[6];
 
                 // Extract the first digit of the ID.
                 string firstDigit = id.Substring(0, 1);
@@ -68,10 +72,10 @@ namespace Employees
 
                     // Convert rate and hours from string to double
                     double rateDouble = double.Parse(rate);
-                    int hoursInt = int.Parse(hours);
+                    double hoursDouble = double.Parse(hours);
 
                     // Create Wages instance
-                    Waged wages = new Waged(id,name, address, rateDouble);
+                    Waged wages = new Waged(id,name, address, rateDouble, hoursDouble);
 
                     // Add to list of employees.
                     employees.Add(wages);
@@ -84,33 +88,78 @@ namespace Employees
 
                     // Convert rate and hours from string to double
                     double rateDouble = double.Parse(rate);
-                    int hoursInt = int.Parse(hours);
+                    double hoursDouble = double.Parse(hours);
 
                     // Create PartTime instance
-                    PartTime partTime = new PartTime(id, name, address, rateDouble);
+                    PartTime partTime = new PartTime(id, name, address, rateDouble, hoursDouble);
 
                     // Add to list of employees
                     employees.Add(partTime);
 
                 }
-
-                /*if (firstDigit == "0" || firstDigit == "1" || firstDigit == "2" || firstDigit == "3" || firstDigit == "4")
-                {
-
-                }*/
-
-                /**
-                 * TODO:
-                 *  - Determine average weekly pay of all employees.
-                 *  - Determine highest paid waged employee.
-                 *  - Determine lowest paid salaried employee.
-                 *  - Determine percentage of employees that are salaried, waged, and part-time.
-                 */
-
-                // It's okay to use loop through employees multiple times.
-                foreach (Employee employee in employees) { 
-                } 
             }
+
+            /*if (firstDigit == "0" || firstDigit == "1" || firstDigit == "2" || firstDigit == "3" || firstDigit == "4")
+{
+
+}*/
+
+            /**
+             * TODO:
+             *  - Determine average weekly pay of all employees. - DONE
+             *  - Determine highest paid waged employee. - DONE
+             *  - Determine lowest paid salaried employee. - DONE
+             *  - Determine percentage of employees that are salaried, waged, and part-time.
+             */
+
+            double weeklyPaySum = 0;
+
+            // It's okay to use loop through employees multiple times.
+            //This look is to calculate the average pay accross all employees
+            foreach (Employee employee in employees)
+            {
+                double weeklyPay = employee.CalcWeeklyPay();
+
+                weeklyPaySum += weeklyPay;
+            }
+
+            double averageWeeklyPay = weeklyPaySum / employees.Count;
+
+            Console.WriteLine("Average Weekly pay: " + averageWeeklyPay);
+            // This loop is to find the highest paid waged employee
+            Waged highestPaidWage = null;
+            foreach (Employee employee in employees)
+            {
+                if (employee is Waged)
+                {
+                   Waged waged = (Waged)employee; 
+
+                    if (highestPaidWage == null || waged.CalcWeeklyPay() > highestPaidWage.CalcWeeklyPay())
+                    {
+                        highestPaidWage = waged;
+                    }
+                }
+            }
+            Console.WriteLine("Employee " + highestPaidWage.Name + " is the highest paid for wages ($" + highestPaidWage.CalcWeeklyPay() + ")");
+
+            // This loop is to find the lowest paid Salaried employee
+            Salaried lowestSalary = null;
+            foreach (Employee employee in employees)
+            {
+                if (employee is Salaried)
+                {
+                    Salaried salaried = (Salaried)employee;
+
+                    if (lowestSalary == null || salaried.CalcWeeklyPay() < lowestSalary.CalcWeeklyPay())
+                    {
+                        lowestSalary = salaried;
+                    }
+                }
+            }
+            Console.WriteLine("Employee " + lowestSalary.Name + " is lowest paid for salaried ($" + lowestSalary.CalcWeeklyPay() + ")");
+
+
+            // The last line here is to figure out the percentage of employees in each category.
         }
     }
 }
